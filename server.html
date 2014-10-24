@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; width: 100%;position:absolute;height:100% }
+      form textarea { border: 0; padding: 10px; height:600px; width: 100%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      a {color:white; cursor:pointer;}
+    </style>
+  </head>
+  <body>
+    <form action="">
+      <textarea id="m"></textarea><br>
+<button onClick="resume();return false;" class="resumebutton" style="background-color:red;display:none;">Resume</button>
+<button class="pausebutton" style="display:none;background-color:red" onClick="pause();return false;">pause</button> 
+<button onClick="speedup();return false;">+</button> 
+<button onClick="slowdown();return false;">-</button> 
+<button>Send</button>
+    </form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+  var socket = io();
+  $('form').submit(function(){
+    socket.emit('chat message', $('#m').val());
+    return false;
+  });
+ socket.on('chat message', function(msg){ $(".resumebutton").hide(); $(".pausebutton").show(); });
+ socket.on('pause', function() { $(".resumebutton").show(); $(".pausebutton").hide(); });
+ socket.on('resume', function() { $(".resumebutton").hide(); $(".pausebutton").show(); });
+
+  function pause() {
+    socket.emit('pause');
+  }
+
+  function resume() { socket.emit('resume');} 
+  function speedup() { socket.emit('speedup');} 
+  function slowdown() { socket.emit('slowdown');} 
+</script>
+
+  </body>
+</html>

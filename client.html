@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 80px Helvetica, Arial;background-color:#000;color:#fff }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+#messages {
+-moz-transform: scale(-1, 1);
+-webkit-transform: scale(-1, 1);
+-o-transform: scale(-1, 1);
+-ms-transform: scale(-1, 1);
+transform: scale(-1, 1);
+}
+    </style>
+  </head>
+  <body>
+    <span>[START]</span>
+    <ul id="messages">
+   </ul>
+<span id="endmarker"><br><br>[END]<br><br><br></span>
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+  var socket = io();
+  var speed = 15;
+
+ socket.on('chat message', function(msg){
+    msg = msg.replace(/\r?\n/g, '<br />');
+    $('#messages').html(msg);
+     doscroll();
+  });
+
+socket.on('pause', function() { stop(); });
+socket.on('resume', function() { start(); });
+socket.on('speedup', function() { speedup(); });
+socket.on('slowdown', function() { slowdown(); });
+
+ function doscroll() {
+   stop();
+   $(window).scrollTop(0);
+   start();
+  }
+
+ function start() {
+  $("html, body").animate({ scrollTop: $(document).height() }, $(document).height() * speed, "linear");
+ }
+
+ function stop() {
+  $("html, body").stop();
+ } 
+
+ function slowdown() {
+  if(speed <30)
+        speed++;
+
+   stop(); start();
+ }
+
+ function speedup() {
+  if(speed >1) 
+	speed--;
+   stop(); start();
+ }
+
+</script>
+
+  </body>
+</html>
